@@ -1,0 +1,13 @@
+[Unit]
+Description=Forest bot service
+After=network.target
+
+[Service]
+User=root
+Type=simple
+WorkingDirectory=/root/forestBot
+ExecStart=/root/forestBot/env/bin/python /root/forestBot/main.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
