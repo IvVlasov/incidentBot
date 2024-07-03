@@ -59,9 +59,9 @@
 
 > apt install -y git python3.10 python3-venv
 
-> git clone https://github.com/IvVlasov/forestBot
+> git clone https://github.com/IvVlasov/incidentBot
 
-> cd forestBot
+> cd incidentBot
 
 Далее необходимо настроить конфигурацию в файле config/config.ini
 Сделать это можно с помощью консольного редактора (nano/vim), либо же через доступ по FTP
