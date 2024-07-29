@@ -43,6 +43,8 @@ def init_db():
             descr TEXT,
             contact TEXT DEFAULT NULL,
             date datetime default current_timestamp,
+            channel_message_id BIGINT DEFAULT 0,
+            answer_channel_message_id BIGINT DEFAULT 0,
             FOREIGN KEY (user_id)  REFERENCES users (chat_id))'''
     cursor.execute(sql)
 
@@ -83,6 +85,23 @@ class Claim:
         cursor.execute(query, (record_id, ))
         rows = cursor.fetchone()
         return rows
+
+    @staticmethod
+    def get_claim_by_message_id(channel_message_id):
+        query = '''select * from claims where channel_message_id = ?'''
+        cursor.execute(query, (channel_message_id, ))
+        rows = cursor.fetchone()
+        return rows
+
+    @staticmethod
+    def update_message_id(record_id, message_id):
+        sql = 'update claims set channel_message_id=? where record_id=?'
+        cursor.execute(sql, (message_id, record_id))
+        connection.commit()
+
+    @staticmethod
+    def set_answer(record_id):
+        pass
 
 
 class Files:

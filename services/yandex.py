@@ -14,6 +14,8 @@ class YandexDisk:
         except yadisk.exceptions.PathExistsError:
             # TODO добавить логгирование
             pass
+        except yadisk.exceptions.UnauthorizedError:
+            pass
 
     @classmethod
     def upload_excel(cls):

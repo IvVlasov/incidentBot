@@ -2,7 +2,7 @@ from settings import bot, CHANNEL_ID, MSGS
 from aiogram.utils.media_group import MediaGroupBuilder
 
 
-async def send_claim_to_admin(data, chat_id):
+async def send_claim_to_channel(data, chat_id):
     text = "Новая заявка: \n\n" + MSGS['admin_claim']
     text = text.format(record_id=data['record_id'],
                        chat_id=chat_id,
@@ -13,9 +13,12 @@ async def send_claim_to_admin(data, chat_id):
 
     if len(data['files_list']) != 0:
         media = await _build_media(data['files_list'], caption=text)
-        await bot.send_media_group(chat_id=CHANNEL_ID, media=media)
+        message = await bot.send_media_group(chat_id=CHANNEL_ID, media=media)
+        message_id = message[0].message_id
     else:
-        await bot.send_message(chat_id=CHANNEL_ID, text=text)
+        message = await bot.send_message(chat_id=CHANNEL_ID, text=text)
+        message_id = message.message_id
+    return message_id
 
 
 async def _build_media(files, caption=''):

@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types.input_file import FSInputFile
 from settings import ADMIN_IDS, MSGS, EXCEL_PATH
 import buttons
-from services import database, admin, excel, yandex
+from services import database, excel, yandex, channel
 from handlers.states import Admin
 import os
 
@@ -96,7 +96,7 @@ async def search_claim_number(message: types.Message, state: FSMContext):
         return
 
     files_dict = [{'file_id': el[2], 'file_type': el[3]} for el in files]
-    media = await admin._build_media(files_dict, caption=text)
+    media = await channel._build_media(files_dict, caption=text)
     await message.answer_media_group(media)
 
 

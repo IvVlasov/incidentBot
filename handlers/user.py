@@ -2,10 +2,10 @@ from typing import List
 from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram_media_group import media_group_handler
-# from aiogram.types.input_file import FSInputFile
+from aiogram.enums import ParseMode
 from settings import MSGS, BTNS, SKIP, SMTP_ENABLE
 from handlers.states import Violation
-from services import database, excel, admin, mail, files
+from services import database, excel, mail, files, channel
 from services.yandex import YandexDisk
 import buttons
 
@@ -130,13 +130,15 @@ async def send_confirm_msg(message: types.Message, state: FSMContext):
 async def confirm_claim(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     await state.clear()
+
     record_id = database.Claim.create(call.message.chat.id, data)
     text = MSGS['steps']['finish'].format(number=record_id)
-    await call.message.answer(text, reply_markup=types.ReplyKeyboardRemove())
+    await call.message.answer(text, parse_mode=ParseMode.MARKDOWN_V2, reply_markup=types.ReplyKeyboardRemove())
 
     data['record_id'] = record_id
-    # Отправляем заявку админу
-    await admin.send_claim_to_admin(data, call.message.chat.id)
+    # Отправляем заявку в channel
+    msg_id = await channel.send_claim_to_channel(data, call.message.chat.id)
+    database.Claim.update_message_id(record_id, msg_id)
     # Вставляем в excel заявку
     excel.ExcelFile.paste_in_excel(data, call.message.chat.id)
     # Обновляем Excel на Яндекс диске
