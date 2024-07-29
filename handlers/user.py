@@ -130,7 +130,7 @@ async def send_confirm_msg(message: types.Message, state: FSMContext):
 async def confirm_claim(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     await state.clear()
-
+    await call.message.edit_reply_markup()
     record_id = database.Claim.create(call.message.chat.id, data)
     text = MSGS['steps']['finish'].format(number=record_id)
     await call.message.answer(text, parse_mode=ParseMode.MARKDOWN_V2, reply_markup=types.ReplyKeyboardRemove())
